@@ -1,0 +1,124 @@
+{
+    "Industries": [
+      {
+        "IndustryName": "Healthcare Industry",
+        "Letters": [
+          {
+            "LetterName": "Patient Appointment Confirmation Letter",
+            "Purpose": "Generate letters confirming scheduled appointments, including date, time, and location."
+          },
+          {
+            "LetterName": "Medical Test Results Letter",
+            "Purpose": "Automatically generate letters providing patients with their test results along with any necessary explanations."
+          },
+          {
+            "LetterName": "Medical Referral Letter",
+            "Purpose": "Create letters for referring patients to specialists or other healthcare providers."
+          }
+        ]
+      },
+      {
+        "IndustryName": "Financial Services Industry",
+        "Letters": [
+          {
+            "LetterName": "Loan Approval Letter",
+            "Purpose": "Automatically generate letters notifying clients about their loan approval, terms, and conditions."
+          },
+          {
+            "LetterName": "Credit Card Statement Letter",
+            "Purpose": "Generate letters with credit card statements, payment due dates, and transaction details."
+          },
+          {
+            "LetterName": "Investment Portfolio Update Letter",
+            "Purpose": "Create letters updating clients about their investment portfolio performance and market insights."
+          }
+        ]
+      },
+      {
+        "IndustryName": "Legal Industry",
+        "Letters": [
+          {
+            "LetterName": "Legal Consultation Confirmation Letter",
+            "Purpose": "Generate letters confirming the schedule and details of legal consultations."
+          },
+          {
+            "LetterName": "Demand Letter",
+            "Purpose": "Automatically draft demand letters for debt collection or legal matters."
+          },
+          {
+            "LetterName": "Legal Notice Letter",
+            "Purpose": "Create letters to send legal notices, such as eviction notices or breach of contract notices."
+          }
+        ]
+      },
+      {
+        "IndustryName": "Real Estate Industry",
+        "Letters": [
+          {
+            "LetterName": "Property Listing Letter",
+            "Purpose": "Generate letters for property listings, including property details, pricing, and contact information."
+          },
+          {
+            "LetterName": "Rental Agreement Letter",
+            "Purpose": "Create letters outlining the terms and conditions of rental agreements."
+          },
+          {
+            "LetterName": "Home Purchase Offer Letter",
+            "Purpose": "Automatically generate letters for making home purchase offers to sellers."
+          }
+        ]
+      },
+      {
+        "IndustryName": "Human Resources Industry",
+        "Letters": [
+          {
+            "LetterName": "Job Offer Letter",
+            "Purpose": "Generate letters offering job positions to candidates, including compensation and benefits details."
+          },
+          {
+            "LetterName": "Employee Promotion Letter",
+            "Purpose": "Create letters announcing promotions and changes in job roles."
+          },
+          {
+            "LetterName": "Termination Letter",
+            "Purpose": "Automatically draft letters for employee termination, including reasons and next steps."
+          }
+        ]
+      },
+      {
+        "IndustryName": "Education Industry",
+        "Letters": [
+          {
+            "LetterName": "Admission Acceptance Letter",
+            "Purpose": "Generate letters welcoming students who have been accepted into educational programs."
+          },
+          {
+            "LetterName": "Course Enrollment Letter",
+            "Purpose": "Create letters confirming students' enrollment in specific courses."
+          },
+          {
+            "LetterName": "Graduation Congratulations Letter",
+            "Purpose": "Automatically draft letters congratulating students on their graduation."
+          }
+        ]
+      },
+      {
+        "IndustryName": "Customer Service Industry",
+        "Letters": [
+          {
+            "LetterName": "Customer Complaint Resolution Letter",
+            "Purpose": "Generate letters acknowledging customer complaints and outlining solutions."
+          },
+          {
+            "LetterName": "Thank You for Your Purchase Letter",
+            "Purpose": "Create letters expressing gratitude to customers for their purchases."
+          },
+          {
+            "LetterName": "Customer Feedback Request Letter",
+            "Purpose": "Automatically draft letters requesting feedback from customers to improve services."
+          }
+        ]
+      }
+    ]
+  }
+  
