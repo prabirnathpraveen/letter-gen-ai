@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useState,useRef,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import axios from "axios";
@@ -18,7 +17,13 @@ const TerminationForm = () => {
     terminationReason: "",
     supervisorName: "",
   });
-
+  const letterRef = useRef(null);
+  useEffect(() => {
+    if (output) {
+      letterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [output]);
+  
   const handleChange = (e) => {
     const { id, value } = e.target;
 
@@ -29,13 +34,9 @@ const TerminationForm = () => {
     e.preventDefault();
 
     setLoading(true);
-
-    console.log(formData);
-
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
-
         {
           prompt: `generate an employee termination letter for ${formData.employeeName} (Employee ID: ${formData.employeeID}). The termination date is ${formData.terminationDate}, and the reason for termination is "${formData.terminationReason}". The decision was made by ${formData.supervisorName}.`,
 
@@ -187,7 +188,7 @@ const TerminationForm = () => {
               {loading ? (
                 <Spinner
                   animation="border"
-                  style={{ width: "1.3rem", height: "1.3rem" }}
+                  className="spinner"
                 />
               ) : (
                 "Generate"
@@ -197,7 +198,9 @@ const TerminationForm = () => {
         </div>
       </div>
 
-      <div>{output && <Letter data={output} />}</div>
+      <div ref={letterRef} id="letter-component">
+        {output && <Letter data={output} />}
+      </div>
     </>
   );
 };

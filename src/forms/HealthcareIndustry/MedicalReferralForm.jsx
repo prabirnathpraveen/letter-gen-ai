@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useRef,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Letter from "../../component/letter";
 import Spinner from "react-bootstrap/Spinner";
-
 const MedicalTestResultForm = () => {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,6 +14,12 @@ const MedicalTestResultForm = () => {
     reasonForReferral: "",
     refferalDoctor:""
   });
+  const letterRef = useRef(null);
+  useEffect(() => {
+    if (output) {
+      letterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [output]);
 
   const handleChange = (e) => {
     const { id, value, type, name } = e.target;
@@ -32,8 +37,6 @@ const MedicalTestResultForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(formData);
-    console.log(JSON.stringify(process.env.REACT_APP_OPEN_AI_KEY));
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
@@ -213,12 +216,14 @@ const MedicalTestResultForm = () => {
               style={{ width: "100px" }}
               onClick={handleSubmit}
             >
-              {loading ? <Spinner animation="border" /> : "Generate"}
+              {loading ? <Spinner animation="border" className="spinner" /> : "Generate"}
             </button>
           </div>
         </div>
       </div>
-      {output && <Letter data={output} />}
+      <div ref={letterRef} id="letter-component">
+        {output && <Letter data={output} />}
+      </div>
     </>
   );
 };

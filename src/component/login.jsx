@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import swal from 'sweetalert';
+import { Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -22,7 +24,7 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div className="container-fluid d-flex justify-content-center align-items-center vh-100">
+    <div className="container-fluid d-flex justify-content-center align-items-center vh-100 login-bg">
       <div className="login-box form-container p-5" style={{ minWidth: "40%" }}>
         <h4 className="text-center">Login</h4>
         <div className="mb-3">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Letter from "../../component/letter";
@@ -23,12 +23,16 @@ const RentalAgreementForm = () => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
-
+  const letterRef = useRef(null);
+  useEffect(() => {
+    if (output) {
+      letterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [output]);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(formData);
-
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
@@ -216,7 +220,7 @@ const RentalAgreementForm = () => {
               {loading ? (
                 <Spinner
                   animation="border"
-                  style={{ width: "1.3rem", height: "1.3rem" }}
+                  className="spinner"
                 />
               ) : (
                 "Generate"
@@ -225,7 +229,9 @@ const RentalAgreementForm = () => {
           </div>
         </div>
       </div>
-      <div>{output && <Letter data={output} />}</div>
+      <div ref={letterRef} id="letter-component">
+        {output && <Letter data={output} />}
+      </div>
     </>
   );
 };

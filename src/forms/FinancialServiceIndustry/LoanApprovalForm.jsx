@@ -1,11 +1,7 @@
-import React, { useState } from "react";
-
+import React, { useState,useRef,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import axios from "axios";
-
 import Letter from "../../component/letter";
-
 import Spinner from "react-bootstrap/Spinner";
 
 const LoanApprovalForm = () => {
@@ -14,17 +10,20 @@ const LoanApprovalForm = () => {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
+    bankName: "",
     applicantName: "",
-
     loanAmount: "",
-
     interestRate: "",
-
     loanTerm: "",
-
     approvalDate: "",
   });
-
+  const letterRef = useRef(null);
+  useEffect(() => {
+    if (output) {
+      letterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [output]);
+  
   const handleChange = (e) => {
     const { id, value } = e.target;
 
@@ -35,32 +34,25 @@ const LoanApprovalForm = () => {
     e.preventDefault();
 
     setLoading(true);
-
-    console.log(formData);
-
     console.log(JSON.stringify(process.env.REACT_APP_OPEN_AI_KEY));
 
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
-
         {
-          prompt: `generate an appointment letter.`,
-
+          prompt: `Generate a loan approval letter for ${formData.applicantName} from ${formData.bankName} for a loan amount of
+          Rs: ${formData.loanAmount}, with an interest rate of ${formData.interestRate}%, a loan term of ${formData.loanTerm} months, 
+          and an approval date of ${formData.approvalDate}.`,
           max_tokens: 350,
         },
-
         {
           headers: {
             "Content-Type": "application/json",
-
             Authorization: `Bearer ${process.env.REACT_APP_OPEN_AI_KEY}`,
           },
         }
       );
-
       console.log(response);
-
       setOutput(response.data.choices[0].text);
     } catch (error) {
       console.error("Error:", error);
@@ -68,21 +60,15 @@ const LoanApprovalForm = () => {
       setLoading(false);
     }
   };
-
   const handleReset = () => {
     setFormData({
       applicantName: "",
-
       loanAmount: "",
-
       interestRate: "",
-
       loanTerm: "",
-
       approvalDate: "",
     });
   };
-
   return (
     <>
       <div className="container form-container" style={{ marginTop: "40px" }}>
@@ -92,7 +78,19 @@ const LoanApprovalForm = () => {
               Loan Approval Letter Form
             </h3>
           </div>
-
+          <div className="col-md-6 p-3">
+            <label htmlFor="bankName" className="form-label">
+              Bank Name <span className="mandatory">*</span>
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="bankName"
+              placeholder="Enter the bank name"
+              value={formData.bankName}
+              onChange={handleChange}
+            />
+          </div>
           <div className="col-md-6 p-3">
             <label htmlFor="applicantName" className="form-label">
               Applicant Name <span className="mandatory">*</span>
@@ -107,7 +105,6 @@ const LoanApprovalForm = () => {
               onChange={handleChange}
             />
           </div>
-
           <div className="col-md-6 p-3">
             <label htmlFor="loanAmount" className="form-label">
               Loan Amount <span className="mandatory">*</span>
@@ -140,7 +137,7 @@ const LoanApprovalForm = () => {
 
           <div className="col-md-6 p-3">
             <label htmlFor="loanTerm" className="form-label">
-              Loan Term <span className="mandatory">*</span>
+              Loan Term (months)<span className="mandatory">*</span>
             </label>
 
             <input
@@ -184,10 +181,7 @@ const LoanApprovalForm = () => {
               onClick={handleSubmit}
             >
               {loading ? (
-                <Spinner
-                  animation="border"
-                  style={{ width: "1.3rem", height: "1.3rem" }}
-                />
+                <Spinner animation="border" className="spinner" />
               ) : (
                 "Generate"
               )}
@@ -196,7 +190,9 @@ const LoanApprovalForm = () => {
         </div>
       </div>
 
-      <div>{output && <Letter data={output} />}</div>
+      <div ref={letterRef} id="letter-component">
+        {output && <Letter data={output} />}
+      </div>
     </>
   );
 };

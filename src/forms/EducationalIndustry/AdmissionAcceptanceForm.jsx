@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Letter from "../../component/letter";
@@ -9,12 +9,18 @@ const AdmissionAcceptanceForm = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     studentName: "",
-    studentID: "",
-    programName: "",
     admissionDate: "",
-    additionalDetails: "",
+    institutionName: "",
+    applicationID: "",
   });
 
+  const letterRef = useRef(null);
+  useEffect(() => {
+    if (output) {
+      letterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [output]);
+  
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -29,7 +35,8 @@ const AdmissionAcceptanceForm = () => {
       const response = await axios.post(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
         {
-          prompt: `generate an admission acceptance letter for ${formData.studentName} (Student ID: ${formData.studentID}). ${formData.studentName} has been admitted to the ${formData.programName} program, starting from ${formData.admissionDate}. Additional details: "${formData.additionalDetails}".`,
+          prompt: `generate a letter that the ${formData.institutionName} has accepted the admission of ${formData.studentName} for the academic year ${formData.academicYear}. Application ID: ${formData.applicationID}.`,
+
           max_tokens: 350,
         },
         {
@@ -51,10 +58,9 @@ const AdmissionAcceptanceForm = () => {
   const handleReset = () => {
     setFormData({
       studentName: "",
-      studentID: "",
-      programName: "",
-      admissionDate: "",
-      additionalDetails: "",
+      academicYear: "",
+      institutionName: "",
+      applicationID: "",
     });
   };
 
@@ -72,7 +78,7 @@ const AdmissionAcceptanceForm = () => {
               Student's Name <span className="mandatory">*</span>
             </label>
             <input
-              type="text"
+              type="year"
               className="form-control"
               id="studentName"
               placeholder="Enter student's name"
@@ -81,59 +87,49 @@ const AdmissionAcceptanceForm = () => {
             />
             <span id="studentName-error" className="error-message"></span>
           </div>
+
           <div className="col-md-6 p-3">
-            <label htmlFor="studentID" className="form-label">
-              Student ID <span className="mandatory">*</span>
+            <label htmlFor="academicYear" className="form-label">
+              Academic Year <span className="mandatory">*</span>
             </label>
             <input
               type="text"
               className="form-control"
-              id="studentID"
-              placeholder="Enter student ID"
-              value={formData.studentID}
+              id="academicYear"
+              placeholder="Enter academic year"
+              value={formData.academicYear}
               onChange={handleChange}
             />
-            <span id="studentID-error" className="error-message"></span>
+            <span id="academicYear-error" className="error-message"></span>
           </div>
+
           <div className="col-md-6 p-3">
-            <label htmlFor="programName" className="form-label">
-              Program Name <span className="mandatory">*</span>
+            <label htmlFor="institutionName" className="form-label">
+              Institution Name <span className="mandatory">*</span>
             </label>
             <input
               type="text"
               className="form-control"
-              id="programName"
-              placeholder="Enter program name"
-              value={formData.programName}
+              id="institutionName"
+              placeholder="Enter institution name"
+              value={formData.institutionName}
               onChange={handleChange}
             />
-            <span id="programName-error" className="error-message"></span>
+            <span id="institutionName-error" className="error-message"></span>
           </div>
           <div className="col-md-6 p-3">
-            <label htmlFor="admissionDate" className="form-label">
-              Admission Date <span className="mandatory">*</span>
+            <label htmlFor="applicationID" className="form-label">
+              Application ID <span className="mandatory">*</span>
             </label>
             <input
-              type="date"
+              type="text"
               className="form-control"
-              id="admissionDate"
-              value={formData.admissionDate}
+              id="applicationID"
+              placeholder="Enter application ID"
+              value={formData.applicationID}
               onChange={handleChange}
             />
-            <span id="admissionDate-error" className="error-message"></span>
-          </div>
-          <div className="col-md-6 p-3">
-            <label htmlFor="additionalDetails" className="form-label">
-              Additional Details
-            </label>
-            <textarea
-              className="form-control"
-              id="additionalDetails"
-              placeholder="Enter additional details"
-              value={formData.additionalDetails}
-              onChange={handleChange}
-            />
-            <span id="additionalDetails-error" className="error-message"></span>
+            <span id="applicationID-error" className="error-message"></span>
           </div>
           <div className="col-md-12 p-3 d-flex justify-content-center">
             <button
@@ -151,10 +147,7 @@ const AdmissionAcceptanceForm = () => {
               onClick={handleSubmit}
             >
               {loading ? (
-                <Spinner
-                  animation="border"
-                  style={{ width: "1.3rem", height: "1.3rem" }}
-                />
+                <Spinner animation="border" className="spinner" />
               ) : (
                 "Generate"
               )}
@@ -162,7 +155,9 @@ const AdmissionAcceptanceForm = () => {
           </div>
         </div>
       </div>
-      <div>{output && <Letter data={output} />}</div>
+      <div ref={letterRef} id="letter-component">
+        {output && <Letter data={output} />}
+      </div>
     </>
   );
 };

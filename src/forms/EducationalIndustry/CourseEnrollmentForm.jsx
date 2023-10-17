@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef,useEffect } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -15,16 +15,19 @@ const CourseEnrollmentForm = () => {
 
   const [formData, setFormData] = useState({
     studentName: "",
-
     studentID: "",
-
     courseName: "",
-
     enrollmentDate: "",
-
     additionalDetails: "",
   });
 
+  const letterRef = useRef(null);
+  useEffect(() => {
+    if (output) {
+      letterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [output]);
+  
   const handleChange = (e) => {
     const { id, value } = e.target;
 
@@ -33,11 +36,7 @@ const CourseEnrollmentForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setLoading(true);
-
-    console.log(formData);
-
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
@@ -47,18 +46,14 @@ const CourseEnrollmentForm = () => {
 
           max_tokens: 350,
         },
-
         {
           headers: {
             "Content-Type": "application/json",
-
             Authorization: `Bearer ${process.env.REACT_APP_OPEN_AI_KEY}`,
           },
         }
       );
-
       console.log(response);
-
       setOutput(response.data.choices[0].text);
     } catch (error) {
       console.error("Error:", error);
@@ -70,13 +65,9 @@ const CourseEnrollmentForm = () => {
   const handleReset = () => {
     setFormData({
       studentName: "",
-
       studentID: "",
-
       courseName: "",
-
       enrollmentDate: "",
-
       additionalDetails: "",
     });
   };
@@ -90,12 +81,10 @@ const CourseEnrollmentForm = () => {
               Course Enrollment Letter Form
             </h3>
           </div>
-
           <div className="col-md-6 p-3">
             <label htmlFor="studentName" className="form-label">
               Student's Name <span className="mandatory">*</span>
             </label>
-
             <input
               type="text"
               className="form-control"
@@ -154,15 +143,12 @@ const CourseEnrollmentForm = () => {
               value={formData.enrollmentDate}
               onChange={handleChange}
             />
-
             <span id="enrollmentDate-error" className="error-message"></span>
           </div>
-
           <div className="col-md-6 p-3">
             <label htmlFor="additionalDetails" className="form-label">
               Additional Details
             </label>
-
             <textarea
               className="form-control"
               id="additionalDetails"
@@ -170,10 +156,8 @@ const CourseEnrollmentForm = () => {
               value={formData.additionalDetails}
               onChange={handleChange}
             />
-
             <span id="additionalDetails-error" className="error-message"></span>
           </div>
-
           <div className="col-md-12 p-3 d-flex justify-content-center">
             <button
               type="reset"
@@ -183,7 +167,6 @@ const CourseEnrollmentForm = () => {
             >
               Reset
             </button>
-
             <button
               type="submit"
               className="btn btn-primary"
@@ -193,7 +176,7 @@ const CourseEnrollmentForm = () => {
               {loading ? (
                 <Spinner
                   animation="border"
-                  style={{ width: "1.3rem", height: "1.3rem" }}
+                  className="spinner"
                 />
               ) : (
                 "Generate"
@@ -202,8 +185,9 @@ const CourseEnrollmentForm = () => {
           </div>
         </div>
       </div>
-
-      <div>{output && <Letter data={output} />}</div>
+      <div ref={letterRef} id="letter-component">
+        {output && <Letter data={output} />}
+      </div>
     </>
   );
 };

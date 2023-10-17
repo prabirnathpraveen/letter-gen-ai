@@ -2,19 +2,31 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Letter from "../../component/letter";
-import Spinner from 'react-bootstrap/Spinner';
+import Spinner from "react-bootstrap/Spinner";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 const PatientAppointmentConfirmationForm = () => {
-  const [output, setOutput] = useState("");
+  
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    doctorName: "", 
+    doctorName: "",
     patientName: "",
     mobileNumber: "",
     email: "",
     dateTime: "",
   });
+  const [output, setOutput] = useState("");
+  const letterRef = useRef(null);
 
+  useEffect(() => {
+    if (output) {
+      letterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [output]);
+
+
+  
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -23,7 +35,6 @@ const PatientAppointmentConfirmationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(formData);
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
@@ -34,8 +45,7 @@ const PatientAppointmentConfirmationForm = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              `Bearer ${process.env.REACT_APP_OPEN_AI_KEY}`,
+            Authorization: `Bearer ${process.env.REACT_APP_OPEN_AI_KEY}`,
           },
         }
       );
@@ -97,7 +107,7 @@ const PatientAppointmentConfirmationForm = () => {
           </div>
           <div className="col-md-6 p-3">
             <label htmlFor="mobilenumber" className="form-label">
-             Doctor's Mobile Number <span className="mandatory">*</span>
+              Doctor's Mobile Number <span className="mandatory">*</span>
             </label>
             <input
               type="tel"
@@ -151,16 +161,18 @@ const PatientAppointmentConfirmationForm = () => {
               style={{ width: "100px" }}
               onClick={handleSubmit}
             >
-              {loading ?<Spinner animation="border" style={{ width: '1.3rem', height: '1.3rem' }}  /> : "Generate"}
+              {loading ? (
+                <Spinner animation="border" className="spinner" />
+              ) : (
+                "Generate"
+              )}
             </button>
           </div>
         </div>
       </div>
-      <div>     
-      </div>      
-        {output && (
-          <Letter data={output} />
-        )}
+       <div ref={letterRef} id="letter-component">
+        {output && <Letter data={output} />}
+      </div>
     </>
   );
 };

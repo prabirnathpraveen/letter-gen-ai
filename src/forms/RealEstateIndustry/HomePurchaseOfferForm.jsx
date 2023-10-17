@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Letter from "../../component/letter";
@@ -16,7 +16,13 @@ const HomePurchaseOfferForm = () => {
     closingDate: "",
     additionalTerms: "",
   });
-
+  const letterRef = useRef(null);
+  useEffect(() => {
+    if (output) {
+      letterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [output]);
+  
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -25,7 +31,6 @@ const HomePurchaseOfferForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(formData);
 
     try {
       const response = await axios.post(
@@ -188,7 +193,7 @@ const HomePurchaseOfferForm = () => {
               {loading ? (
                 <Spinner
                   animation="border"
-                  style={{ width: "1.3rem", height: "1.3rem" }}
+                  className="spinner"
                 />
               ) : (
                 "Generate"
@@ -197,7 +202,9 @@ const HomePurchaseOfferForm = () => {
           </div>
         </div>
       </div>
-      <div>{output && <Letter data={output} />}</div>
+      <div ref={letterRef} id="letter-component">
+        {output && <Letter data={output} />}
+      </div>
     </>
   );
 };
