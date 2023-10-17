@@ -140,7 +140,7 @@ const Dropdownlist = () => {
               width="1440"
               height="36"
               viewBox="0 0 1440 36"
-              class="u-block"
+              className="u-block"
               xmlns="http://www.w3.org/2000/svg"
               style={{width: "100%",height: "auto", margin: "0",padding: "0"}}
             >
